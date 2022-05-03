@@ -56,8 +56,8 @@ namespace SiliconWafer
                 scatter.Points.Add(new ScatterPoint(-degree45, degree45, 5, count));
                 
                 //Draw a Circle given the current radius 
-                model.Series.Add(new FunctionSeries((x) => Math.Sqrt(Math.Pow(count,2) - Math.Pow(x, 2)), -count, count, 0.1) { Color = OxyColors.Black });
-                model.Series.Add(new FunctionSeries((x) => -Math.Sqrt(Math.Pow(count, 2) - Math.Pow(x, 2)), -count, count, 0.1) { Color = OxyColors.Black });
+                model.Series.Add(new FunctionSeries((x) => Math.Sqrt(Math.Max(Math.Pow(count,2) - Math.Pow(x, 2),0)), -count, count, 0.1) { Color = OxyColors.Black });
+                model.Series.Add(new FunctionSeries((x) => -Math.Sqrt(Math.Max(Math.Pow(count, 2) - Math.Pow(x, 2),0)), -count, count, 0.1) { Color = OxyColors.Black });
                 count += radius;
             }
 
