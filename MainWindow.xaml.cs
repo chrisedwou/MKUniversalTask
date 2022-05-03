@@ -38,32 +38,32 @@ namespace SiliconWafer
         {
             var model = new PlotModel();
             var scatter = new ScatterSeries { MarkerType = MarkerType.Circle, MarkerSize = 1 };
-            var radius = (max / numPoints);
-            var count = 0.0;
+            var baseRadius = (max / numPoints);
+            var currentRadius = 0.0;
             var degree45 = 0.0;
 
-            while (count <= max)
+            while (currentRadius <= max)
             {
                 //Plot 8 points on a circle given the current radius
-                degree45 = (count * Math.Sqrt(2)) / 2;
-                scatter.Points.Add(new ScatterPoint(count, 0, 5, count));
-                scatter.Points.Add(new ScatterPoint(-count, 0, 5, count));
-                scatter.Points.Add(new ScatterPoint(0, count, 5, count));
-                scatter.Points.Add(new ScatterPoint(0, -count, 5, count));
-                scatter.Points.Add(new ScatterPoint(degree45, degree45, 5, count));
-                scatter.Points.Add(new ScatterPoint(degree45, -degree45, 5, count));
-                scatter.Points.Add(new ScatterPoint(-degree45, -degree45, 5, count));
-                scatter.Points.Add(new ScatterPoint(-degree45, degree45, 5, count));
+                degree45 = (currentRadius * Math.Sqrt(2)) / 2;
+                scatter.Points.Add(new ScatterPoint(currentRadius, 0, 5, currentRadius));
+                scatter.Points.Add(new ScatterPoint(-currentRadius, 0, 5, currentRadius));
+                scatter.Points.Add(new ScatterPoint(0, currentRadius, 5, currentRadius));
+                scatter.Points.Add(new ScatterPoint(0, -currentRadius, 5, currentRadius));
+                scatter.Points.Add(new ScatterPoint(degree45, degree45, 5, currentRadius));
+                scatter.Points.Add(new ScatterPoint(degree45, -degree45, 5, currentRadius));
+                scatter.Points.Add(new ScatterPoint(-degree45, -degree45, 5, currentRadius));
+                scatter.Points.Add(new ScatterPoint(-degree45, degree45, 5, currentRadius));
                 
                 //Draw a Circle given the current radius 
-                model.Series.Add(new FunctionSeries((x) => Math.Sqrt(Math.Max(Math.Pow(count,2) - Math.Pow(x, 2),0)), -count, count, 0.1) { Color = OxyColors.Black });
-                model.Series.Add(new FunctionSeries((x) => -Math.Sqrt(Math.Max(Math.Pow(count, 2) - Math.Pow(x, 2),0)), -count, count, 0.1) { Color = OxyColors.Black });
-                count += radius;
+                model.Series.Add(new FunctionSeries((x) => Math.Sqrt(Math.Max(Math.Pow(currentRadius,2) - Math.Pow(x, 2),0)), -currentRadius, currentRadius, 0.1) { Color = OxyColors.Black });
+                model.Series.Add(new FunctionSeries((x) => -Math.Sqrt(Math.Max(Math.Pow(currentRadius, 2) - Math.Pow(x, 2),0)), -currentRadius, currentRadius, 0.1) { Color = OxyColors.Black });
+                currentRadius += baseRadius;
             }
 
             model.Series.Add(scatter);
-            model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Bottom, IsZoomEnabled = false, IsPanEnabled = false, IsAxisVisible = false });
-            model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Left, IsZoomEnabled = false, IsPanEnabled = false, IsAxisVisible = false });
+            model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Bottom, IsAxisVisible = false });
+            model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Left, IsAxisVisible = false });
             this.Model0 = model;
         }
         private void Ok_Click(object sender, RoutedEventArgs e)
