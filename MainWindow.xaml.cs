@@ -22,25 +22,30 @@ namespace SiliconWafer
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
+    /// Author: Chris Edwards
     /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
-
+            Model0 = new PlotModel();
         }
         public PlotModel Model0 { get; private set; }
-        private static PlotModel CreatePlotModel(double max, double numPoints )
+        private Regex _regex = new Regex("[^0-9]+");
+
+        private void CreatePlotModel(double max, double numPoints )
         {
             var model = new PlotModel();
-            var scatter = new ScatterSeries { MarkerType = MarkerType.Circle, MarkerSize = 1,  };
+            var scatter = new ScatterSeries { MarkerType = MarkerType.Circle, MarkerSize = 1 };
             var radius = (max / numPoints);
-            double count = 0;
-            double degree45 = 0;
-            while(count <= max)
+            var count = 0.0;
+            var degree45 = 0.0;
+
+            while (count <= max)
             {
-                degree45 = (Math.PI * count) / 4;
+                //Plot 8 points on a circle given the current radius
+                degree45 = (count * Math.Sqrt(2)) / 2;
                 scatter.Points.Add(new ScatterPoint(count, 0, 5, count));
                 scatter.Points.Add(new ScatterPoint(-count, 0, 5, count));
                 scatter.Points.Add(new ScatterPoint(0, count, 5, count));
@@ -49,27 +54,33 @@ namespace SiliconWafer
                 scatter.Points.Add(new ScatterPoint(degree45, -degree45, 5, count));
                 scatter.Points.Add(new ScatterPoint(-degree45, -degree45, 5, count));
                 scatter.Points.Add(new ScatterPoint(-degree45, degree45, 5, count));
+                
+                //Draw a Circle given the current radius 
+                model.Series.Add(new FunctionSeries((x) => Math.Sqrt(Math.Pow(count,2) - Math.Pow(x, 2)), -count, count, 0.1) { Color = OxyColors.Black });
+                model.Series.Add(new FunctionSeries((x) => -Math.Sqrt(Math.Pow(count, 2) - Math.Pow(x, 2)), -count, count, 0.1) { Color = OxyColors.Black });
                 count += radius;
             }
+
             model.Series.Add(scatter);
-            model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Bottom, IsZoomEnabled = false, IsPanEnabled = false, IsAxisVisible=false });
+            model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Bottom, IsZoomEnabled = false, IsPanEnabled = false, IsAxisVisible = false });
             model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Left, IsZoomEnabled = false, IsPanEnabled = false, IsAxisVisible = false });
-            return model;
+            this.Model0 = model;
         }
         private void Ok_Click(object sender, RoutedEventArgs e)
         {
-            if (userInput.Text == "")
-            {
-                return;
-            }
+            //Check if user input is a number. If not, do nothing.
+            if (userInput.Text == "" || _regex.IsMatch(userInput.Text)) return;
+
             int input = Int32.Parse(userInput.Text);
-            this.Model0 = CreatePlotModel( 150, input);
+
+            CreatePlotModel( 150, input);
             this.DataContext = this;
+
+            okButton.Visibility = Visibility.Hidden;
         }
         private void NumberCheck(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[^0-9]+");
-            e.Handled = regex.IsMatch(e.Text);
+            e.Handled = _regex.IsMatch(e.Text);
         }
     }
 }

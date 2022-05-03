@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SiliconWafer"
         xmlns:oxy="http://oxyplot.org/wpf"
+        ResizeMode="NoResize"
         mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="90"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
